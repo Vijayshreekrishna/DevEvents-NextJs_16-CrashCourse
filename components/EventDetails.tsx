@@ -129,8 +129,8 @@ const EventDetails = async ({ params }: { params: Promise<string> }) => {
             <div className="flex w-full flex-col gap-4 pt-20">
                 <h2>Similar Events</h2>
                 <div className="events">
-                    {similarEvents.length > 0 && similarEvents.map((similarEvent: IEvent) => (
-                        <EventCard key={similarEvent.title} {...similarEvent} />
+                    {similarEvents.length > 0 && similarEvents.map((similarEvents: IEvent) => (
+                        <EventCard key={similarEvents.title} {...similarEvents} />
                     ))}
                 </div>
             </div>
