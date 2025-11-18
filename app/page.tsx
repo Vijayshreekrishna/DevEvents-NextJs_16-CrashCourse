@@ -2,12 +2,37 @@ import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/EventCard";
 import { IEvent } from "@/database";
 import { cacheLife } from "next/cache";
+import { headers } from "next/headers";
 
+// ------------------------------
+// Helper: fetch events (NO cache)
+// ------------------------------
+async function getEvents() {
+    const h = headers();
+    const host = h.get("x-forwarded-host") || "localhost:3000";
+    const protocol = h.get("x-forwarded-proto") || "http";
+    const baseUrl = `${protocol}://${host}`;
+
+    const res = await fetch(`${baseUrl}/api/events`, {
+        cache: "no-store",
+    });
+
+    if (!res.ok) {
+        console.error("Event fetch failed:", res.status);
+        return { events: [] };
+    }
+
+    return res.json();
+}
+
+// ------------------------------
+// PAGE COMPONENT
+// ------------------------------
 const Page = async () => {
     "use cache";
     cacheLife("hours");
 
-    const { events } = await getEvents(); // <-- SAFE NOW
+    const { events } = await getEvents(); // now defined ✔
 
     return (
         <section>
@@ -15,7 +40,7 @@ const Page = async () => {
                 The Hub For EveryDev <br /> Event You Can't Miss
             </h1>
             <p className="text-center mt-5">
-                Hackathons, Meetups and Conferences. All in one place
+                Hackathons, Meetups, and Conferences. All in one place.
             </p>
 
             <ExploreBtn />
@@ -37,3 +62,4 @@ const Page = async () => {
 };
 
 export default Page;
+a
